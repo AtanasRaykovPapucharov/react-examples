@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { Requester } from "../services/Requester";
+
+const URL = "https://api.punkapi.com/v2/beers";
 
 class App extends Component {
   constructor() {
@@ -6,7 +9,8 @@ class App extends Component {
 
     // state
     this.state = {
-      name: ""
+      name: "",
+      beers: []
     };
 
     // this and function binding
@@ -24,6 +28,13 @@ class App extends Component {
 
   // hook
   componentDidMount() {
+    // GET Request
+    Requester()
+      .getAll(URL)
+      .then((data) => {
+        console.log(data)
+        this.setState({ beers: data});
+      });
 
   }
 
@@ -44,6 +55,19 @@ class App extends Component {
         <br />
 
         <div className="welcome">{"Welcome, " + this.state.name}</div>
+
+        <br />
+        <hr />
+        <br />
+
+        {
+          this.state.beers.map((beer, i) => {
+            return <article key={i}>
+              <img src={beer.image_url} alt="img" width="60px"/>
+              <span>{beer.name}</span>
+            </article>
+          })
+        }
 
       </div>
     );
